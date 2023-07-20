@@ -94,6 +94,9 @@ class TimerApp:
         self.start_sub_timer_button = tk.Button(root, text="Start Sub-Timer", command=self.start_sub_timer)
         self.start_sub_timer_button.pack()
 
+        self.save_main_timer_button = tk.Button(root, text="End", command=self.save_main_timer_details)
+        self.save_main_timer_button.pack()
+
         self.update_timer_label()
 
     def start_timer(self):
@@ -155,6 +158,15 @@ class TimerApp:
             for sub_timer in self.current_timer.sub_timers:
                 with open("subtimer_details.txt", "a") as f:
                     f.write(f"{sub_timer.name}, Time Count: {sub_timer.get_time_passed()}\n")
+
+    def save_main_timer_details(self):
+        if self.current_timer:
+            with open("subtimer_details.txt", "a") as f:
+                f.write(f"{self.current_timer.name}, Time Count: {self.current_timer.get_time_passed()}\n")
+            for sub_timer in self.current_timer.sub_timers:
+                with open("subtimer_details.txt", "a") as f:
+                    f.write(f"{sub_timer.name}, Time Count: {sub_timer.get_time_passed()}\n")
+        self.root.quit()    
 
     def update_timer_label(self):
         if self.current_timer:
