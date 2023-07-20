@@ -85,9 +85,6 @@ class TimerApp:
         self.start_button = tk.Button(root, text="Start Timer", command=self.start_timer)
         self.start_button.pack()
 
-        self.reset_button = tk.Button(root, text="Reset Timer", command=self.reset_timer)
-        self.reset_button.pack()
-
         self.rest_button = tk.Button(root, text="Rest", command=self.rest_timer)
         self.rest_button.pack()
 
@@ -109,13 +106,6 @@ class TimerApp:
         self.update_timer_label()
 
         self.root.after(1000, self.update_timer_label)  # Update label every 1 second
-
-    def reset_timer(self):
-        if self.current_timer:
-            self.current_timer.reset()
-            self.current_timer.rest_time = timedelta(seconds=0)  # Reset rest time on reset
-
-        self.update_timer_label()
 
     def rest_timer(self):
         if self.current_timer:
@@ -152,6 +142,19 @@ class TimerApp:
         sub_timer.stop()
         self.current_timer.remove_sub_timer(sub_timer)
         frame.destroy()
+
+        # Save sub-timer details to a text file
+        with open("subtimer_details.txt", "a") as f:
+            f.write(f"{sub_timer.name}, Time Count: {sub_timer.get_time_passed()}\n")
+
+    # Add a method to handle saving sub-timer details manually
+    def save_sub_timer_details(self):
+        if self.current_timer:
+            with open("subtimer_details.txt", "a") as f:
+                f.write(f"{self.current_timer.name}, Time Count: {self.current_timer.get_time_passed()}\n")
+            for sub_timer in self.current_timer.sub_timers:
+                with open("subtimer_details.txt", "a") as f:
+                    f.write(f"{sub_timer.name}, Time Count: {sub_timer.get_time_passed()}\n")
 
     def update_timer_label(self):
         if self.current_timer:
